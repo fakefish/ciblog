@@ -1,13 +1,11 @@
 <?php
 
 class User_model extends CI_Model {
-  public function __construct()
-  {
+  public function __construct() {
     $this->load->database();
   }
 
-  public function create_user()
-  {
+  public function create_user() {
 
     $data = array(
       'username' => $this->input->post('username'), 
@@ -19,14 +17,12 @@ class User_model extends CI_Model {
     return $this->db->insert('users',$data);
   }
 
-  public function get_user($username = FALSE)
-  {
-    if($username == FALSE)
-    {
+  public function get_user($username = FALSE) {
+    if($username == FALSE) {
       return false;
     }
 
     $query = $this->db->get_where('users',array('username'=>$username));
-    return $query->row_array();
+    return $query->row();
   }
 }
