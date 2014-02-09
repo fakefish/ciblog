@@ -13,11 +13,22 @@ class User extends CI_Controller {
     $this->load->helper('form');
     $this->load->library('form_validation');
 
-    $data['title'] = "Login";
+    $this->form_validation->set_rules('username','Username','trim|required|xss_clean');
+    $this->form_validation->set_rules('password','Password','md5');
 
-    $this->load->view('templates/header',$data);
-    $this->load->view('user/login');
-    $this->load->view('templates/footer');
+    if($this->form_validation->run() === FALSE)
+    {
+      $data['title'] = "Login";
+
+      $this->load->view('templates/header',$data);
+      $this->load->view('user/login');
+      $this->load->view('templates/footer');
+    }
+    else
+    {
+      $this->user_model->get_user();
+    }
+    
   }
 
   public function register()
@@ -25,8 +36,8 @@ class User extends CI_Controller {
     $this->load->helper('form');
     $this->load->library('form_validation');
 
-    $this->form_validation->set_rules('username','Username','required');
-    $this->form_validation->set_rules('password','Password','required');
+    $this->form_validation->set_rules('username','Username','trim|required|xss_clean|callback_nameonly');
+    $this->form_validation->set_rules('password','Password','trim|required|mathes[passconf]|md5');
     $this->form_validation->set_rules('passconf','Password Confirmation','required');
 
     if($this->form_validation->run() === FALSE)
@@ -43,7 +54,10 @@ class User extends CI_Controller {
       $this->load->view('user/success');
     }
 
-    
+    function nameonly($str)
+    {
+
+    }
   }
 
 
