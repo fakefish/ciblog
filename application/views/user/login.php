@@ -9,4 +9,4 @@
 
 </form>
 
-<a href="user/register">register</a>
+<a href="./register">register</a>
