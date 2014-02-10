@@ -9,7 +9,13 @@ class User extends CI_Controller {
 
   public function login() {
     $this->load->helper('form');
+    $this->load->helper('url');
     $this->load->library('form_validation');
+
+    if(!$this->session->userdata('uid')){
+      redirect('/');
+    }
+    // 这里要判断是否已经登录
 
     $this->form_validation->set_rules('username','Username','trim|required|xss_clean');
     $this->form_validation->set_rules('password','Password','md5');
@@ -26,6 +32,16 @@ class User extends CI_Controller {
 
       if($result && $password == $result->password) {
         $this->load->view('user/login-success');
+
+        $this->load->library('session');
+        
+
+        $this->session->set_userdata('uid',$result->id);
+        $this->session->set_userdata('username',$result->username);
+        $this->session->set_userdata('email',$result->email);
+        $this->session->set_userdata('logged_in',TRUE);
+
+        redirect('/');
       } else {
         $this->form_validation->set_message('username or password error');
         $this->load->view('templates/header',$data);
@@ -37,6 +53,7 @@ class User extends CI_Controller {
 
   public function register() {
     $this->load->helper('form');
+    $this->load->helper('url');
     $this->load->library('form_validation');
 
     $this->form_validation->set_rules('username','Username','trim|required|xss_clean|callback_nameonly');
@@ -51,7 +68,7 @@ class User extends CI_Controller {
       $this->load->view('templates/footer');
     } else {
       $this->user_model->create_user();
-      $this->load->view('user/create-success');
+      redirect('/login');
     }
 
     function nameonly($str) {

@@ -41,7 +41,12 @@
 
 $route['login'] = 'user/login';
 $route['register'] = 'user/register';
-$route['default_controller'] = 'user/login';
+$route['write'] = 'post/create';
+$route['update/(:any)'] = 'post/update/$1';
+$route['delete/(:any)'] = 'post/delete/$1';
+$route['view/(:any)'] = 'post/view/$1';
+$route['view'] = 'post/view';
+$route['default_controller'] = 'post/view';
 $route['404_override'] = '';
 
 
