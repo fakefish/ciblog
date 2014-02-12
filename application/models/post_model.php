@@ -22,12 +22,18 @@ class Post_model extends CI_Model {
   }
 
   public function get_post($pid = FALSE) {
+    $this->db->select('*');
+    $this->db->from('posts');
+    $this->db->join('users','users.id=posts.uid');
+
     if($pid === FALSE) {
-      $query = $this->db->join('users','users.id=posts.pid')->get('posts');
-      return $query->row();
+      $this->db->order_by('pid desc');
+      $query = $this->db->get();
+      return $query->result();
     }
 
-    $query = $this->db->get_where('posts',array('pid'=>$pid));
+    $this->db->where('pid',$pid);
+    $query = $this->db->get();
     return $query->row();
   }
 
@@ -35,14 +41,7 @@ class Post_model extends CI_Model {
     if($pid === FALSE) {
       return FALSE;
     }
-    $this->load->helper('url');
-
-    $current = $this->session->userdata['uid'];
-    $query = $this->db->select('uid')->from('posts')->where('pid',$pid);
-    $post_uid = $query->row()->uid;
-    if($current !== $post_uid) {
-      redirect('/');
-    }
+    $this->load->helper('date');
 
     $data = array(
       'title' => $this->input->post('title'),
@@ -61,13 +60,6 @@ class Post_model extends CI_Model {
       return FALSE;
     }
     $this->load->helper('url');
-
-    $current = $this->session->userdata['uid'];
-    $query = $this->db->select('uid')->from('posts')->where('pid',$pid);
-    $post_uid = $query->row()->uid;
-    if($current !== $post_uid) {
-      redirect('/','location');
-    }
 
     return $this->db->delete('posts',array('pid'=>$pid));
   }

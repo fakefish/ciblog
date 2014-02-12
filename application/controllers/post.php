@@ -9,7 +9,13 @@ class Post extends CI_Controller {
   public function create() {
     $this->load->model('post_model');
     $this->load->helper('form');
+    $this->load->helper('url');
     $this->load->library('form_validation');
+
+    if(!$this->session->userdata('logged_in')) {
+      redirect('/');
+    }
+
 
     $this->form_validation->set_rules('title','Title','required|xss_clean');
     $this->form_validation->set_rules('content','Content','required|xss_clean');
@@ -24,7 +30,8 @@ class Post extends CI_Controller {
       $this->load->view('templates/footer');
     } else {
       $this->post_model->create_post();
-      $this->load->view('post/create-success');
+      // $this->load->view('post/create-success');
+      redirect('/');
     }
   }
 
@@ -34,8 +41,15 @@ class Post extends CI_Controller {
     $this->load->library('form_validation');
     $this->load->helper('url');
 
-    $current = $this->session->userdata('uid');
+    if($pid === FALSE) {
+      redirect('/');
+    }
 
+    $current = $this->session->userdata('uid');
+    $data['post'] = $this->post_model->get_post($pid);
+    if($data['post']->uid !== $current) {
+      redirect('/');
+    }
 
     $this->form_validation->set_rules('title','Title','required|xss_clean');
     $this->form_validation->set_rules('content','Content','required|xss_clean');
@@ -46,13 +60,11 @@ class Post extends CI_Controller {
       $data['title'] = "Update Post";
 
       $this->load->view('templates/header',$data);
-      $this->load->view('post/create');
+      $this->load->view('post/update',$data);
       $this->load->view('templates/footer');
     } else {
-      if($pid !== FALSE) {
-        $this->post_model->update($pid);
-        redirect('/','refresh');
-      }
+      $this->post_model->update_post($pid);
+      redirect('/view/'.$data['post']->pid);
     }
   }
 
@@ -78,8 +90,14 @@ class Post extends CI_Controller {
     $this->load->model('post_model');
     $this->load->helper('url');
 
+    $current = $this->session->userdata('uid');
+    $data['post'] = $this->post_model->get_post($pid);
+    if($data['post']->uid !== $current) {
+      redirect('/');
+    }
+
     if($pid !== FALSE) {
-      $this->post_model->delete($pid);
+      $this->post_model->delete_post($pid);
       redirect('/','refresh');
     }
   }

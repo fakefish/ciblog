@@ -12,7 +12,7 @@ class User extends CI_Controller {
     $this->load->helper('url');
     $this->load->library('form_validation');
 
-    if(!$this->session->userdata('uid')){
+    if($this->session->userdata('logged_in')){
       redirect('/');
     }
     // 这里要判断是否已经登录
@@ -76,5 +76,7 @@ class User extends CI_Controller {
     }
   }
 
-
+  public function logout() {
+    
+  }
 }
