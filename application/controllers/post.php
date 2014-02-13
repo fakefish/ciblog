@@ -71,18 +71,41 @@ class Post extends CI_Controller {
   public function view($pid = FALSE) {
     $this->load->model('post_model');
 
-    $data['title'] = "Post List";
-
-    $this->load->view('templates/header',$data);
-
     if($pid === FALSE) {
-      $data['posts'] = $this->post_model->get_post();
-      $this->load->view('post/index',$data);
+      redirect('/');
+      // $data['posts'] = $this->post_model->get_post();
+      // $this->load->view('post/index',$data);
     } else {
       $data['post'] = $this->post_model->get_post($pid);
+      $data['title'] = $data['post']->title;
+      $this->load->view('templates/header',$data);
       $this->load->view('post/view',$data);
     }
 
+    $this->load->view('templates/footer');
+  }
+
+  public function plist($p = FALSE) {
+    $this->load->model('post_model');
+    $this->load->library('pagination');
+
+    if($p === FALSE) {
+      $data['posts'] = $this->post_model->get_list_post();
+    } else {
+      $data['posts'] = $this->post_model->get_list_post($p);
+    }
+
+    $data['title'] = 'Post List';
+    $config['base_url'] = page_url('list');
+    $config['total_rows'] = count($data['posts']);
+    $config['per_page'] = intval(count($data['posts'])/5); 
+
+    $this->pagination->initialize($config); 
+
+    echo $this->pagination->create_links();
+
+    $this->load->view('templates/header',$data);
+    $this->load->view('post/index',$data);
     $this->load->view('templates/footer');
   }
 

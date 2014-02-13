@@ -33,9 +33,6 @@ class User extends CI_Controller {
       if($result && $password == $result->password) {
         $this->load->view('user/login-success');
 
-        $this->load->library('session');
-        
-
         $this->session->set_userdata('uid',$result->id);
         $this->session->set_userdata('username',$result->username);
         $this->session->set_userdata('nickname',$result->nickname);
@@ -57,9 +54,10 @@ class User extends CI_Controller {
     $this->load->helper('url');
     $this->load->library('form_validation');
 
-    $this->form_validation->set_rules('username','Username','trim|required|xss_clean|callback_nameonly');
+    $this->form_validation->set_rules('username','Username','trim|required|xss_clean|is_unique[users.username]');
     $this->form_validation->set_rules('password','Password','trim|required|mathes[passconf]|md5');
     $this->form_validation->set_rules('passconf','Password Confirmation','required');
+    $this->form_validation->set_rules('email','Email','required|is_unique[users.email]');
 
     if($this->form_validation->run() === FALSE) {
       $data['title'] = "Register";
@@ -72,9 +70,6 @@ class User extends CI_Controller {
       redirect('/login');
     }
 
-    function nameonly($str) {
-      
-    }
   }
 
   public function logout() {
