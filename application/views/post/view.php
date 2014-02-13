@@ -9,5 +9,8 @@
 <div class="tags">
   Tag: <?php echo $post->tag; ?>
 </div>
+
+<?php if($this->session->userdata('uid') === $post->uid): ?>
 <a href="../update/<?php echo $post->pid; ?>">Edit This Article</a>
 <a href="../delete/<?php echo $post->pid; ?>">Delete</a>
+<?php endif ?>

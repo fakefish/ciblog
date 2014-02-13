@@ -42,6 +42,7 @@
 $route['login'] = 'user/login';
 $route['register'] = 'user/register';
 $route['write'] = 'post/create';
+$route['logout'] = 'user/logout';
 $route['update/(:any)'] = 'post/update/$1';
 $route['delete/(:any)'] = 'post/delete/$1';
 $route['view/(:any)'] = 'post/view/$1';

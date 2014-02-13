@@ -38,6 +38,7 @@ class User extends CI_Controller {
 
         $this->session->set_userdata('uid',$result->id);
         $this->session->set_userdata('username',$result->username);
+        $this->session->set_userdata('nickname',$result->nickname);
         $this->session->set_userdata('email',$result->email);
         $this->session->set_userdata('logged_in',TRUE);
 
@@ -72,11 +73,17 @@ class User extends CI_Controller {
     }
 
     function nameonly($str) {
-
+      
     }
   }
 
   public function logout() {
-    
+    $this->session->unset_userdata('uid');
+    $this->session->unset_userdata('username');
+    $this->session->unset_userdata('nickname');
+    $this->session->unset_userdata('email');
+    $this->session->set_userdata('logged_in',FALSE);
+
+    redirect('/');
   }
 }
