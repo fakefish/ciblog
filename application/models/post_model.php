@@ -50,7 +50,17 @@ class Post_model extends CI_Model {
     }
 
     $query = $this->db->get();
+    var_dump($query->result());
     return $query->result();
+  }
+
+  public function get_post_nums() {
+    $this->db->select('*');
+    $this->db->from('posts');
+    $this->db->join('users','users.id = posts.uid');
+    $this->db->order_by('pid desc');
+
+    return $this->db->count_all_results();
   }
 
   public function update_post($pid = FALSE) {
