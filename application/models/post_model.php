@@ -50,7 +50,6 @@ class Post_model extends CI_Model {
     }
 
     $query = $this->db->get();
-    var_dump($query->result());
     return $query->result();
   }
 
