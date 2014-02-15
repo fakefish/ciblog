@@ -46,7 +46,7 @@ class Post_model extends CI_Model {
     if($p === FALSE) {
       $this->db->limit(5);
     } else {
-      $this->db->limit($p*5,$p*5+5);
+      $this->db->limit($p*5+5,$p*5);
     }
 
     $query = $this->db->get();

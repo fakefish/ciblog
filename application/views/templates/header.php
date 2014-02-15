@@ -2,7 +2,9 @@
 <html lang="zh-cmn-hans">
 <head>
   <meta charset="UTF-8">
+  <base href="<?php echo base_url();?>">
   <title><?php echo $title ?></title>
+  <link rel="stylesheet" href="static/css/typo.css">
 </head>
 <body>
   <nav>
